@@ -89,16 +89,14 @@ export default class TabManager extends AbstractManager {
             Object.getPrototypeOf(leaf),
             "getDisplayText",
             this,
-            function (self2, _, vanilla) {
+            function (self, _, vanilla) {
                 const filePath = this.view == null
                     ? null
                     : this.view.file != null
                         ? this.view.file.path
                         : (this.view.getState() || {}).file;
 
-                let title = filePath ? self2.resolver.resolve(filePath) : vanilla.call(this);
-
-                return title;
+                return filePath ? self.resolver.resolve(filePath) : vanilla.call(this);
             }
         );
 
