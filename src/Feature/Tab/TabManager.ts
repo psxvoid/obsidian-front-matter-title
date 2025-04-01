@@ -16,6 +16,7 @@ export default class TabManager extends AbstractManager {
     private readonly callback: () => void = null;
     private ref: ListenerRef<"layout:change">;
     private replacer: FunctionReplacer<WorkspaceLeaf, "setPinned", TabManager> = null;
+    private replacerDisplayText: FunctionReplacer<WorkspaceLeaf, "getDisplayText", TabManager> = null;
 
     constructor(
         @inject(SI["facade:obsidian"])
@@ -47,6 +48,7 @@ export default class TabManager extends AbstractManager {
     protected async doDisable(): Promise<void> {
         this.dispatcher.removeListener(this.ref);
         this.replacer?.disable();
+        this.replacerDisplayText?.disable();
         this.ref = null;
         this.reset();
         this.enabled = false;
@@ -82,7 +84,26 @@ export default class TabManager extends AbstractManager {
                 return result;
             }
         );
+
+        this.replacerDisplayText = FunctionReplacer.create(
+            Object.getPrototypeOf(leaf),
+            "getDisplayText",
+            this,
+            function (self2, _, vanilla) {
+                const filePath = this.view == null
+                    ? null
+                    : this.view.file != null
+                        ? this.view.file.path
+                        : (this.view.getState() || {}).file;
+
+                let title = filePath ? self2.resolver.resolve(filePath) : vanilla.call(this);
+
+                return title;
+            }
+        );
+
         this.replacer.enable();
+        this.replacerDisplayText.enable();
     }
 
     private reset() {
