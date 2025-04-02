@@ -94,9 +94,13 @@ export default class TabManager extends AbstractManager {
                     ? null
                     : this.view.file != null
                         ? this.view.file.path
-                        : (this.view.getState() || {}).file;
+                        : (this.view.getState() ?? {}).file;
+                
+                if (filePath != null) {
+                    return self.resolver.resolve(filePath) ?? vanilla.call(this);
+                }
 
-                return filePath ? self.resolver.resolve(filePath) : vanilla.call(this);
+                return vanilla.call(this);
             }
         );
 
