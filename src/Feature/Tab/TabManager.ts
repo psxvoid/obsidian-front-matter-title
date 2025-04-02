@@ -90,6 +90,7 @@ export default class TabManager extends AbstractManager {
             "getDisplayText",
             this,
             function (self, _, vanilla) {
+                /* eslint-disable eqeqeq */
                 const filePath =
                     this.view == null
                         ? null
@@ -102,6 +103,7 @@ export default class TabManager extends AbstractManager {
                 }
 
                 return vanilla.call(this);
+                /* eslint-enable eqeqeq */
             }
         );
 
