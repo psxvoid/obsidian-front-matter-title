@@ -90,12 +90,13 @@ export default class TabManager extends AbstractManager {
             "getDisplayText",
             this,
             function (self, _, vanilla) {
-                const filePath = this.view == null
-                    ? null
-                    : this.view.file != null
+                const filePath =
+                    this.view == null
+                        ? null
+                        : this.view.file != null
                         ? this.view.file.path
                         : (this.view.getState() ?? {}).file;
-                
+
                 if (filePath != null) {
                     return self.resolver.resolve(filePath) ?? vanilla.call(this);
                 }
